@@ -1,20 +1,13 @@
 version: 2.1
-orbs:
-  python: circleci/python@2.0.3
-  
 jobs:
-  build_and_test:
-    executor: python/default
-#    docker:
-#      - image: cimg/python:3.10.1
+  build:
+    docker:
+      - image: cimg/python:3.10.1
     steps:
       - checkout
-      - python/install-packages:
-          pkg-manager: pipenv
+      - run:
+          name: Install dependencies
+          command: pip install -r requirements.txt
       - run:
           name: Running tests
-          command: python -m pytest
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - .
+          command: python3 tests.py
