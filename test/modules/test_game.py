@@ -97,7 +97,7 @@ class fourInRowTestCase(unittest.TestCase):
         with self.assertRaises(OutOfRangeException):
             self.fourInRow.insertToken(11)
 
-    def test_InsertToken_OutOfRangeException(self):
+    def test_InsertToken_formatException(self):
         with self.assertRaises(formatException):
             self.fourInRow.insertToken('#')
         with self.assertRaises(formatException):
@@ -361,5 +361,5 @@ class fourInRowTestCase(unittest.TestCase):
         with self.assertRaises(TieException):
             self.fourInRow.insertToken(5)
 
-if __name__=='__main__':
-    unittest.main()
+# if __name__=='__main__':
+#     unittest.main()
