@@ -1,2 +1,1 @@
 # 4-en-linea-Ignacio687.
-# En la carpeta "test" estan todos los tests ordenados de la misma forma que los correspondientes archivos fuera de esta carpeta, cada test tiene el nombre de su respectivo archivo.
