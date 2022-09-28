@@ -6,3 +6,4 @@ omit =
     README.md
     requirements.txt
     */__init__.py
+    run.py
