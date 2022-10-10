@@ -1,47 +1,56 @@
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from main.game import *
+
+class ExitGame(Exception):
+    pass
 
 class Game():
 
     def __init__(self):
         self.game = FourInRow()
+        self.printStatement = f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  '
 
     def play(self):
-        print('Hello lest play Four In Row! \n\n')
-        gameStatus = False
-        while not gameStatus:
-            self.printBoard()
-            playerInstruction = input(f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  ')
-            if playerInstruction in ('exit','Exit','EXIT'):
+        print('\nHello lest play Four In Row!')
+        consoleInput = ''
+        while True:
+            try:
+                instructions = self.print_input(consoleInput)
+                self.printBoard()
+                print(instructions)
+                consoleInput = input(self.printStatement)
+            except ExitGame:
                 break
+
+    def print_input(self, playerInstruction):
+        if 'again' in self.printStatement:
+            if playerInstruction in ('no', 'No', 'NO'):
+                raise ExitGame
+            elif playerInstruction in ('yes', 'Yes', 'YES'):
+                self.printStatement = f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  '
+                self.game.resetBoard()
+        else:
+            if playerInstruction in ('exit','Exit','EXIT'):
+                raise ExitGame
             elif playerInstruction in ('reset', 'Reset', 'RESET'):
                 self.game.resetBoard()
             else:
                 try:
                     self.game.insertToken(int(playerInstruction)-1)
                 except (OutOfRangeException, formatException, ValueError):
-                    continue
+                    return ''
                 except NoAvailablePositionException:
-                    print(f'\nTheres no more available positions in column {playerInstruction}\n')
+                    return f'\nThere are no more available positions in column {playerInstruction}\n'
                 except TieException:
-                    print('TIE! les try again')
                     self.game.resetBoard()
+                    return '\nTIE! les try again'
                 except WinnerException:
-                    self.printBoard()
-                    print(f'\nPlayer {self.game.turn+1} winns!!!\n')
-                    while True:
-                        playerInstruction = input('Want to play again?(yes/no)  ')
-                        if  playerInstruction in ('yes', 'Yes', 'YES'):
-                            self.game.resetBoard()
-                            break
-                        elif playerInstruction in ('no', 'No', 'NO'):
-                            gameStatus = True
-                            break
+                    self.printStatement = 'Want to play again?(yes/no)  '
+                    return f'\nPlayer {self.game.turn+1} winns!!!\n'
+        return ''
                     
     def printBoard(self):
         board = self.game.board
+        print('\n')
         for line in range(1, len(board)+1):
             print(f'  {line}  ', end='')
         print('\n+'+('----+'*len(board)))
@@ -53,7 +62,3 @@ class Game():
                     printValue = '    '
                 print (f'|{printValue}', end='')
             print('|\n+'+('----+'*len(board)))
-
-# if __name__=='__main__':
-#     game = Game()
-#     game.play()
