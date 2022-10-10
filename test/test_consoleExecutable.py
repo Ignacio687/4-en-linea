@@ -72,7 +72,7 @@ class ExecutableTestCase(unittest.TestCase):
         self.game.print_input(4)
         for rowCounter in range(0,8):
             self.game.print_input(8)
-        self.assertEqual(self.game.print_input(5), 'TIE! les try again')
+        self.assertEqual(self.game.print_input(5), '\nTIE! les try again')
         self.assertTrue(resetBoard.called)
 
     def test_winner(self):
