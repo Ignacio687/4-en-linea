@@ -1,3 +1,5 @@
+from operator import truediv
+from turtle import exitonclick
 from main.fourInLine import *
 
 class ExitGame(Exception):
@@ -7,48 +9,53 @@ class Game():
 
     def __init__(self):
         self.game = FourInLine()
-        self.printStatement = f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  '
+        self.gameState = 0
 
     def play(self):
         print('\nHello lest play Four In Row!')
         self.printBoard()
         while True:
             try:
-                consoleInput = input(self.printStatement)
-                instructions = self.print_input(consoleInput)
+                consoleInput = input(f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  ')
+                statement = self.defPlay(consoleInput)
                 self.printBoard()
-                print(instructions)
+                print(statement)
             except ExitGame:
                 break
+            except WinnerException:
+                    try: 
+                        consoleInput = input('Want to play again?(yes/no)   ')
+                        self.playAgain(consoleInput)
+                    except ExitGame:
+                        exit
 
-    def print_input(self, playerInstruction):
-        returnStatement = ''
-        if 'again' in self.printStatement:
-            if playerInstruction in ('no', 'No', 'NO'):
-                raise ExitGame
-            elif playerInstruction in ('yes', 'Yes', 'YES'):
-                self.printStatement = f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  '
-                self.game.resetBoard()
+
+    def defPlay(self, playerInstruction):
+        if playerInstruction in ('exit','Exit','EXIT'):
+            raise ExitGame
+        elif playerInstruction in ('reset', 'Reset', 'RESET'):
+            self.game.resetBoard()
+            returnStatement = ''
         else:
-            if playerInstruction in ('exit','Exit','EXIT'):
-                raise ExitGame
-            elif playerInstruction in ('reset', 'Reset', 'RESET'):
+            try:
+                self.game.insertToken(int(playerInstruction)-1)
+            except (OutOfRangeException, formatException, ValueError):
+                returnStatement = ''
+            except NoAvailablePositionException:
+                returnStatement = f'\nThere are no more available positions in column {playerInstruction}\n'
+            except TieException:
                 self.game.resetBoard()
-            else:
-                try:
-                    self.game.insertToken(int(playerInstruction)-1)
-                except (OutOfRangeException, formatException, ValueError):
-                    returnStatement = ''
-                except NoAvailablePositionException:
-                    returnStatement = f'\nThere are no more available positions in column {playerInstruction}\n'
-                except TieException:
-                    self.game.resetBoard()
-                    returnStatement = '\nTIE! les try again'
-                except WinnerException:
-                    self.printStatement = 'Want to play again?(yes/no)  '
-                    returnStatement = f'\nPlayer {self.game.turn+1} winns!!!\n'
+                returnStatement = '\nTIE! les try again'
+            except WinnerException:
+                returnStatement = f'\nPlayer {self.game.turn+1} winns!!!\n'
         return returnStatement
-                    
+
+    def playAgain(self, playerInstruction):
+        if playerInstruction in ('no', 'No', 'NO'):
+                raise ExitGame
+        elif playerInstruction in ('yes', 'Yes', 'YES'):
+                self.game.resetBoard()
+
     def printBoard(self):
         board = self.game.board
         print('\n')
