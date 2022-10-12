@@ -1,4 +1,4 @@
-from main.consoleExecutable import Game
+from main.consoleGame import Game
 
 if __name__=='__main__':
     game = Game()

@@ -9,7 +9,7 @@ class OutOfRangeException(Exception):
 class formatException(Exception):
     pass
 
-class FourInRow():
+class FourInLine():
     
     def __init__(self):
         self.board = [['' for i in range(0,8)]for e in range(0,8)]
