@@ -11,17 +11,18 @@ class Game():
 
     def play(self):
         print('\nHello lest play Four In Row!')
-        consoleInput = ''
+        self.printBoard()
         while True:
             try:
+                consoleInput = input(self.printStatement)
                 instructions = self.print_input(consoleInput)
                 self.printBoard()
                 print(instructions)
-                consoleInput = input(self.printStatement)
             except ExitGame:
                 break
 
     def print_input(self, playerInstruction):
+        returnStatement = ''
         if 'again' in self.printStatement:
             if playerInstruction in ('no', 'No', 'NO'):
                 raise ExitGame
@@ -37,16 +38,16 @@ class Game():
                 try:
                     self.game.insertToken(int(playerInstruction)-1)
                 except (OutOfRangeException, formatException, ValueError):
-                    return ''
+                    returnStatement = ''
                 except NoAvailablePositionException:
-                    return f'\nThere are no more available positions in column {playerInstruction}\n'
+                    returnStatement = f'\nThere are no more available positions in column {playerInstruction}\n'
                 except TieException:
                     self.game.resetBoard()
-                    return '\nTIE! les try again'
+                    returnStatement = '\nTIE! les try again'
                 except WinnerException:
                     self.printStatement = 'Want to play again?(yes/no)  '
-                    return f'\nPlayer {self.game.turn+1} winns!!!\n'
-        return ''
+                    returnStatement = f'\nPlayer {self.game.turn+1} winns!!!\n'
+        return returnStatement
                     
     def printBoard(self):
         board = self.game.board
