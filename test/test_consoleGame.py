@@ -1,7 +1,7 @@
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch
-from main.consoleExecutable import *
+from main.consoleGame import *
 
 class ExecutableTestCase(unittest.TestCase):
 
@@ -22,7 +22,7 @@ class ExecutableTestCase(unittest.TestCase):
             self.game.print_input(parameter)
 
     @parameterized.expand(('yes', 'Yes', 'YES')) 
-    @patch('main.game.FourInRow.resetBoard')
+    @patch('main.fourInLine.FourInLine.resetBoard')
     def test_playAgain(self, parameter, resetBoard):
         for counterTimes in range(0,5):
             for counterColumn in range(1,3):
@@ -40,13 +40,13 @@ class ExecutableTestCase(unittest.TestCase):
         self.assertEqual(self.game.print_input(parameter), '')
 
     @parameterized.expand(('reset', 'Reset', 'RESET'))
-    @patch('main.game.FourInRow.resetBoard')
+    @patch('main.fourInLine.FourInLine.resetBoard')
     def test_reset(self, parameter, resetBoard):
         self.assertEqual(self.game.print_input(parameter), '')
         self.assertTrue(resetBoard.called)
 
     @parameterized.expand(('1', '2', '3', '4', '5', '6', '7', '8'))
-    @patch('main.game.FourInRow.insertToken')
+    @patch('main.fourInLine.FourInLine.insertToken')
     def test_insertToken(self, parameter, insertToken):
         self.assertEqual(self.game.print_input(parameter), '')
         self.assertTrue(insertToken.called)
@@ -57,7 +57,7 @@ class ExecutableTestCase(unittest.TestCase):
         self.assertEqual(self.game.print_input(1), f'\nThere are no more available positions in column 1\n')
         self.assertEqual(self.game.print_input(1), f'\nThere are no more available positions in column 1\n')
 
-    @patch('main.game.FourInRow.resetBoard')
+    @patch('main.fourInLine.FourInLine.resetBoard')
     def test_tie(self, resetBoard):
         for columnCounter in range(1,4):
             for rowCounter in range(0,8):

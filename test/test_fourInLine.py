@@ -1,11 +1,11 @@
 import unittest
-from main.game import *
+from main.fourInLine import *
 from parameterized import parameterized
 
 class fourInRowTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.fourInRow = FourInRow()
+        self.fourInRow = FourInLine()
 
     def test_boardGeneration(self):
         self.assertEqual(self.fourInRow.board, [['', '', '', '', '', '', '', ''], 

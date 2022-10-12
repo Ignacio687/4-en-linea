@@ -1,4 +1,4 @@
-from main.game import *
+from main.fourInLine import *
 
 class ExitGame(Exception):
     pass
@@ -6,7 +6,7 @@ class ExitGame(Exception):
 class Game():
 
     def __init__(self):
-        self.game = FourInRow()
+        self.game = FourInLine()
         self.printStatement = f'\nPlayer {(self.game.turn)+1} select a Column(1-8/exit/reset):  '
 
     def play(self):
