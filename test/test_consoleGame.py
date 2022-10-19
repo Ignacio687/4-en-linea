@@ -76,6 +76,63 @@ class ConsoleGamePlayAgain(unittest.TestCase):
             self.game.playAgain()
             self.assertEqual(inputMock.call_count, len(['es', 'Y', 'YE', '80', '22','2odkd9','exi','¡1¿', 'yes']))
 
+class ConsolePlay(unittest.TestCase):
+
+    def setUp(self):
+        self.game = Game()
+
+    @patch('test.test_consoleGame.Game.printBoard', return_value='.printBoard()')
+    @patch('test.test_consoleGame.Game.defPlay', return_value='.defPlayStatement')
+    @patch('main.fourInLine.FourInLine.returnTurn', return_value=4)
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['userInput', ExitGame])
+    def test_firstIterationConditions(self, inputMock, printMock, returnTurn, defPlay, printBoard):
+        self.game.play()
+        self.assertEqual(str(printMock.call_args_list[0].args[0]), '\nHello lest play Four In Row!')
+        self.assertEqual(str(printMock.call_args_list[1].args[0]), '.printBoard()')
+        self.assertEqual(inputMock.call_args.args[0], '\nPlayer 5 select a Column(1-8/exit/reset):  ')
+        self.assertEqual(str(printMock.call_args_list[2].args[0]), '.printBoard()')
+        self.assertEqual(str(printMock.call_args_list[3].args[0]), '.defPlayStatement')
+        self.assertEqual(inputMock.call_args.args[0], '\nPlayer 5 select a Column(1-8/exit/reset):  ')
+
+    @patch('test.test_consoleGame.Game.printBoard', return_value='.printBoard()')
+    @patch('test.test_consoleGame.Game.defPlay', side_effect=[WinnerException, ExitGame])
+    @patch('main.fourInLine.FourInLine.returnTurn', return_value=4)
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['userInput', 'adsa', 'yes', 'userInput'])
+    def test_winnerAndPlayAgainConditions(self, inputMock, printMock, returnTurn, defPlay, printBoard):
+        self.game.play()
+        self.assertEqual(str(printMock.call_args_list[2].args[0]), '.printBoard()') 
+        self.assertEqual(str(printMock.call_args_list[3].args[0]), '\nPlayer 5 winns!!!\n')
+        self.assertEqual(str(inputMock.call_args_list[1].args[0]), 'Want to play again?(yes/no)   ')
+        self.assertEqual(str(inputMock.call_args_list[2].args[0]), 'Want to play again?(yes/no)   ')
+        self.assertEqual(str(printMock.call_args_list[4].args[0]), 'Great, lets go!')
+        self.assertEqual(str(printMock.call_args_list[5].args[0]), '.printBoard()')
+        self.assertEqual(str(inputMock.call_args_list[3].args[0]), '\nPlayer 5 select a Column(1-8/exit/reset):  ')
+
+    @patch('test.test_consoleGame.Game.printBoard', return_value='.printBoard()')
+    @patch('test.test_consoleGame.Game.defPlay', side_effect=[FormatException, ExitGame])
+    @patch('main.fourInLine.FourInLine.returnTurn', return_value=4)
+    @patch('builtins.print')
+    @patch('builtins.input', return_value='incorrectUserInput')
+    def test_formatExceptionRepeatsMainQuestionConditions(self, inputMock, printMock, returnTurn, defPlay, printBoard):
+        self.game.play()
+        self.assertEqual(str(inputMock.call_args_list[0].args[0]), '\nPlayer 5 select a Column(1-8/exit/reset):  ')
+        self.assertEqual(str(inputMock.call_args_list[1].args[0]), '\nPlayer 5 select a Column(1-8/exit/reset):  ')
+        self.assertEqual(printMock.call_count, 2)
+
+    @patch('test.test_consoleGame.Game.printBoard', return_value='.printBoard()')
+    @patch('test.test_consoleGame.Game.defPlay', side_effect=WinnerException)
+    @patch('main.fourInLine.FourInLine.returnTurn', return_value=4)
+    @patch('builtins.print')
+    @patch('builtins.input', side_effect=['userInput', 'adsa', 'no'])
+    def test_PlayAgain_Exit_Conditions(self, inputMock, printMock, returnTurn, defPlay, printBoard):
+        self.game.play()
+        self.assertEqual(str(inputMock.call_args_list[0].args[0]), '\nPlayer 5 select a Column(1-8/exit/reset):  ')
+        self.assertEqual(printMock.call_count, 4)
+        self.assertEqual(inputMock.call_count, 3)
+
+        
 class ConsolePrintBoard(unittest.TestCase):
 
     def setUp(self):

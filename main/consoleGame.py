@@ -29,6 +29,7 @@ class Game():
             except ExitGame:
                 break
             except WinnerException:
+                print(self.printBoard())
                 print(f'\nPlayer {self.game.returnTurn()+1} winns!!!\n')
                 try:
                     print(self.playAgain())
