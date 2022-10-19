@@ -7,3 +7,6 @@ argument-count:
 similar-code:
     config:
        threshold: 3
+method-complexity:
+    config:
+      threshold: 12
