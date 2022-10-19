@@ -2,91 +2,118 @@ import unittest
 from main.fourInLine import *
 from parameterized import parameterized
 
-class fourInRowTestCase(unittest.TestCase):
+class FourInRowTestCase(unittest.TestCase):
 
     def setUp(self):
         self.fourInRow = FourInLine()
 
-    def test_boardGeneration(self):
-        self.assertEqual(self.fourInRow.board, [['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', '']])
+    def test_returnBoardAndBoardGeneration(self):
+        self.assertEqual(self.fourInRow.returnBoard(), [
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', ''], 
+        ['', '', '', '', '', '', '', '']])
+
+    def test_setBoard(self):
+        self.fourInRow.setBoard([
+            [1, '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', 1, '', '', 0, '', ''], 
+            ['', '', '', '', 0, '', '', ''], 
+            ['', '', '', 0, '', '', '', ''], 
+            ['', '', 0, '', '', '', '', 1], 
+            [0, '', '', '', '', '', '', ''], 
+            ['', '', '', 1, '', '', '', '']])
+        self.assertEqual(self.fourInRow.returnBoard(), [
+            [1, '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', 1, '', '', 0, '', ''], 
+            ['', '', '', '', 0, '', '', ''], 
+            ['', '', '', 0, '', '', '', ''], 
+            ['', '', 0, '', '', '', '', 1], 
+            [0, '', '', '', '', '', '', ''], 
+            ['', '', '', 1, '', '', '', '']])
 
     def test_resetfourInRow(self):
-        self.fourInRow.board = [['', '', '', '', '', '', '', ''], 
-                                 ['', '', '', '', '', '', 0, ''], 
-                                 ['', '', '', '', '', 0, '', ''], 
-                                 ['', '', '', '', 0, '', '', ''], 
-                                 ['', '', '', 0, '', '', '', ''], 
-                                 ['', '', 0, '', '', '', '', ''], 
-                                 [0, '', '', '', '', '', '', ''], 
-                                 ['', '', '', '', '', '', '', 0]]
+        self.fourInRow.setBoard([
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', '', '', '', 0, '', ''], 
+            ['', '', '', '', 0, '', '', ''], 
+            ['', '', '', 0, '', '', '', ''], 
+            ['', '', 0, '', '', '', '', ''], 
+            [0, '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', 0]]) 
         self.fourInRow.resetBoard()
-        self.assertEqual(self.fourInRow.board, [['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', ''], 
-                                                   ['', '', '', '', '', '', '', '']])
+        self.assertEqual(self.fourInRow.returnBoard(), [
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', '']])
     
     @parameterized.expand([(0, 5), (1, 7),(2, 4), (3, 3), (4, 2), (5, 1), (6, 0), (7, 6)])
     def test_NextcolumnPositionSelector(self, column, row):
-        self.fourInRow.board = [['', '', '', '', '', '', '', ''], 
-                                 ['', '', '', '', '', '', 0, ''], 
-                                 ['', '', '', '', '', 0, '', ''], 
-                                 ['', '', '', '', 0, '', '', ''], 
-                                 ['', '', '', 0, '', '', '', ''], 
-                                 ['', '', 0, '', '', '', '', ''], 
-                                 [0, '', '', '', '', '', '', ''], 
-                                 ['', '', '', '', '', '', '', 0]]
-        self.assertEqual(self.fourInRow.NAPIRS(column), row)
+        self.fourInRow.setBoard([
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', '', '', '', 0, '', ''], 
+            ['', '', '', '', 0, '', '', ''], 
+            ['', '', '', 0, '', '', '', ''], 
+            ['', '', 0, '', '', '', '', ''], 
+            [0, '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', 0]])
+        self.assertEqual(self.fourInRow.NAPICS(column), row)
 
     @parameterized.expand([(0,),(3,),(7,)])
     def test_NextcolumnPositionSelect_Exception(self, column):
-        self.fourInRow.board = [[0, '', '', 0, '', '', '', 0], 
-                                 ['', '', '', '', '', '', 0, ''], 
-                                 ['', '', '', '', '', 0, '', ''], 
-                                 ['', '', '', '', 0, '', '', ''], 
-                                 ['', '', '', '', '', '', '', ''], 
-                                 ['', '', 0, '', '', '', '', ''], 
-                                 ['', '', '', '', '', '', '', ''], 
-                                 ['', '', '', '', '', '', '', '']]
+        self.fourInRow.setBoard([
+            [0, '', '', 0, '', '', '', 0], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', '', '', '', 0, '', ''], 
+            ['', '', '', '', 0, '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', 0, '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', '']])
         with self.assertRaises(NoAvailablePositionException):
-            self.fourInRow.NAPIRS(column)
+            self.fourInRow.NAPICS(column)
 
     def test_InsertToken(self):
         self.fourInRow.insertToken(3)
-        self.assertEqual(self.fourInRow.board, [['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', '', '', '', '', ''], 
-                                                ['', '', '', 0, '', '', '', '']])
+        self.assertEqual(self.fourInRow.returnBoard(), [
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', 0, '', '', '', '']])
     
     def test_turnChange(self):
         self.fourInRow.insertToken(4)
-        self.assertEqual(self.fourInRow.turn, 1)
+        self.assertEqual(self.fourInRow.returnTurn(), 1)
         self.fourInRow.insertToken(2)
-        self.assertEqual(self.fourInRow.turn, 0)
+        self.assertEqual(self.fourInRow.returnTurn(), 0)
 
     def test_InsertToken_Exception(self):
-        self.fourInRow.board = [['', '', '', '', '', '', 1, ''], 
-                                 ['', '', '', '', '', '', 0, ''], 
-                                 ['', '', '', '', '', '', 0, ''], 
-                                 ['', '', '', '', '', '', 1, ''], 
-                                 ['', '', '', '', '', '', 1, ''], 
-                                 ['', '', '', '', '', '', 1, ''], 
-                                 ['', '', '', '', '', '', 1, ''], 
-                                 ['', '', '', '', '', '', 0, '']]
+        self.fourInRow.setBoard([
+            ['', '', '', '', '', '', 1, ''], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', '', '', '', '', 0, ''], 
+            ['', '', '', '', '', '', 1, ''], 
+            ['', '', '', '', '', '', 1, ''], 
+            ['', '', '', '', '', '', 1, ''], 
+            ['', '', '', '', '', '', 1, ''], 
+            ['', '', '', '', '', '', 0, '']])
         with self.assertRaises(NoAvailablePositionException):
             self.fourInRow.insertToken(6)
 
@@ -94,10 +121,10 @@ class fourInRowTestCase(unittest.TestCase):
         with self.assertRaises(OutOfRangeException):
             self.fourInRow.insertToken(11)
 
-    def test_InsertToken_formatException(self):
-        with self.assertRaises(formatException):
+    def test_InsertToken_FormatException(self):
+        with self.assertRaises(FormatException):
             self.fourInRow.insertToken('#')
-        with self.assertRaises(formatException):
+        with self.assertRaises(FormatException):
             self.fourInRow.insertToken('a')
 
 
@@ -123,7 +150,7 @@ class fourInRowTestCase(unittest.TestCase):
                            )
                           ])
     def test_VerifyLineWinnerCondition(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         with self.assertRaises(WinnerException):
             self.fourInRow.insertToken(column)
 
@@ -149,7 +176,7 @@ class fourInRowTestCase(unittest.TestCase):
                         )
                         ])
     def test_VerifyColumnWinnerCondition(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         with self.assertRaises(WinnerException):
             self.fourInRow.insertToken(column) 
 
@@ -185,7 +212,7 @@ class fourInRowTestCase(unittest.TestCase):
                            )
                           ])
     def test_VerifyDiagonalToTheRigth_WinnerCondition(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         with self.assertRaises(WinnerException):
             self.fourInRow.insertToken(column) 
     
@@ -221,7 +248,7 @@ class fourInRowTestCase(unittest.TestCase):
                         )
                         ])
     def test_VerifyDiagonalToTheLeft_WinnerCondition(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         with self.assertRaises(WinnerException):
             self.fourInRow.insertToken(column) 
 #here
@@ -247,7 +274,7 @@ class fourInRowTestCase(unittest.TestCase):
                            )
                           ])
     def test_VerifyLineWinnerCondition_NotRaise(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         self.fourInRow.insertToken(column)
 
     @parameterized.expand([(
@@ -272,7 +299,7 @@ class fourInRowTestCase(unittest.TestCase):
                         )
                         ])
     def test_VerifyColumnWinnerCondition_NotRaise(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         self.fourInRow.insertToken(column) 
 
     @parameterized.expand([(
@@ -307,7 +334,7 @@ class fourInRowTestCase(unittest.TestCase):
                            )
                           ])
     def test_VerifyDiagonalToTheRigth_WinnerCondition_NotRaise(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         self.fourInRow.insertToken(column) 
     
     @parameterized.expand([(
@@ -342,21 +369,19 @@ class fourInRowTestCase(unittest.TestCase):
                         )
                         ])
     def test_VerifyDiagonalToTheLeft_WinnerCondition_NotRaise(self, board, column):
-        self.fourInRow.board = board
+        self.fourInRow.setBoard(board)
         self.fourInRow.insertToken(column) 
 
     def test_tie(self):
-        self.fourInRow.board = [[0, 1, 0, '', 0, '', 1, 0], 
-                                ['', '', 1, 0, 0, 1, 0, ''], 
-                                ['', '', '', '', '', '', '', ''], 
-                                ['', '', '', '', '', '', '', ''], 
-                                ['', '', '', '', '', '', '', ''], 
-                                ['', '', '', '', '', '', '', ''], 
-                                ['', '', '', '', '', '', '', ''], 
-                                ['', '', '', '', '', '', '', '']]
+        self.fourInRow.setBoard([
+            [0, 1, 0, '', 0, '', 1, 0], 
+            ['', '', 1, 0, 0, 1, 0, ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', ''], 
+            ['', '', '', '', '', '', '', '']])
         self.fourInRow.insertToken(3)
         with self.assertRaises(TieException):
             self.fourInRow.insertToken(5)
-
-# if __name__=='__main__':
-#     unittest.main()
