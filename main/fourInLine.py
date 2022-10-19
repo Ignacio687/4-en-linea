@@ -6,7 +6,7 @@ class WinnerException(Exception):
     pass
 class OutOfRangeException(Exception):
     pass
-class formatException(Exception):
+class FormatException(Exception):
     pass
 
 class FourInLine():
@@ -18,7 +18,7 @@ class FourInLine():
     def resetBoard(self):
         self.board = [['' for i in range(0,8)]for e in range(0,8)]
     
-    def NAPIRS(self, column):       # (NAPIRS) Next available position in column selector
+    def NAPICS(self, column):       # (NAPICS) Next available position in column selector
         if self.board[0][column] != '':
             raise NoAvailablePositionException
         for row in range(1,8):
@@ -30,10 +30,10 @@ class FourInLine():
         try:
             column = int(column)
         except ValueError:
-            raise formatException(f'{column} is not a whole number')
+            raise FormatException(f'{column} is not a whole number')
         if column > 7:
             raise OutOfRangeException
-        row = self.NAPIRS(column)
+        row = self.NAPICS(column)
         self.board[row][column] = self.turn
         if row == 0:
             if self.board[0].count('') == 0:
@@ -73,3 +73,12 @@ class FourInLine():
             columnCounter = counter if column+row <= 7 else 7-(counter-startPoint)
             tokenCounter = tokenCounter+1 if self.board[rowCounter][columnCounter] == self.turn else 0
             if tokenCounter >= 4: raise WinnerException
+    
+    def returnBoard(self):
+        return self.board
+    
+    def returnTurn(self):
+        return self.turn
+
+    def setBoard(self, board):
+        self.board = board
